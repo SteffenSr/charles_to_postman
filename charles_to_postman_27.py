@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 charles_to_postman.py
 by: Amber Race
@@ -150,9 +151,9 @@ def convert_charles_to_postman(charles_node):
     method = charles_node['method']
     postman_item['name'] = path
 
-    if charles_node['port']:
+    if charles_node['actualPort']:
         url = '%s://%s:%s%s' % (charles_node['scheme'],
-                                charles_node['host'], charles_node['port'], path)
+                                charles_node['host'], charles_node['actualPort'], path)
     else:
         url = '%s://%s%s' % (charles_node['scheme'],
                              charles_node['host'], path)
@@ -168,8 +169,13 @@ def convert_charles_to_postman(charles_node):
             {'key': header['name'], 'value': header['value']})
 
     if c_request['sizes']['body'] > 0:
-        body = {'mode': 'raw', 'raw': c_request['body']['text']}
-        p_request['body'] = body
+        '''if c_request['body']['encoding'] != 'base64':'''
+        if 'encoding' in c_request['body']:
+            body = {'mode': 'raw', 'raw': c_request['body']['encoding']}
+            p_request['body'] = body
+        else:
+            body = {'mode': 'raw', 'raw': c_request['body']['text']}
+            p_request['body'] = body
 
     postman_item['request'] = p_request
 
@@ -191,7 +197,12 @@ def convert_charles_to_postman(charles_node):
             {'key': header['name'], 'value': header['value']})
 
     if c_response['sizes']['body'] > 0:
-        p_response['body'] = c_response['body']['text']
+        if 'encoding' in c_response['body']:
+            body = {'mode': 'raw', 'raw': c_response['body']['encoding']}
+            p_response['body'] = body
+        else:
+            body = {'mode': 'raw', 'raw': c_response['body']['text']}
+            p_response['body'] = body
         if c_response['mimeType'] == 'application/json':
             p_response['_postman_previewlanguage'] = 'json'
             p_response['_postman_previewtype'] = 'parsed'
