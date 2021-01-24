@@ -19,4 +19,15 @@ For Python 2, use *charles\_to\_postman_27.py*; otherwise, use *charles\_to\_pos
                          Input file in the *.chlsj format
    -o OUTPUT, --output OUTPUT
                          Output file
-   -n NAME, --name NAME  Name of the target Postman collection```
+   -n NAME, --name NAME  Name of the target Postman collection
+   ```
+
+Concrete example:
+Make it executable om MacOS terminal: 
+
+`chmod +x charles_to_postman_27.py`
+
+Execute:
+
+`./charles_to_postman_27.py -i auth_sunny_day.json -o auth_postman.json -n auth_sunnyday`
+
